@@ -33,11 +33,11 @@ class RedditData {
         task.resume()
     }
     
-    func titleForIndex(index : Int) -> String {
+    func dataForIndex(index : Int) -> NSDictionary? {
         if let array = self.items {
-            return array[index]!["data"]!["title"] as String
+            return array[index]!["data"] as? NSDictionary
         }
         
-        return ""
+        return nil
     }
 }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MainViewController: UITableViewController {
+class MainViewController: UITableViewController, UITableViewDelegate {
 
     let redditData : RedditData = RedditData();
     
@@ -19,60 +19,86 @@ class MainViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupRefreshControl()
     }
     
     override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+    func setupRefreshControl() {
+        let refreshControl = UIRefreshControl()
+        
+        refreshControl.addTarget(self, action: Selector("requestedRefresh"), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.attributedTitle = NSAttributedString(string: "retrieving posts")
+        
+        self.refreshControl = refreshControl
+        
+        //beginRefreshing não chama o refresh adequadamente, por isso temos o setContentOffset
+        self.refreshControl.beginRefreshing()
+        self.tableView.setContentOffset(CGPointMake(0, self.tableView.contentOffset.y-self.refreshControl.frame.size.height), animated: true)
+        self.refreshControl.sendActionsForControlEvents(UIControlEvents.ValueChanged)
+    }
+    
+    func requestedRefresh() {
         
         func reloadInterface() {
             // chama na thread principal
             dispatch_after(0, dispatch_get_main_queue(), {
                 // atualiza a tabela
                 self.tableView.reloadData()
+                self.refreshControl.endRefreshing()
             })
         }
         
         self.redditData.reloadData(reloadInterface)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-
     // #pragma mark - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView?) -> Int {
-        return 1
-    }
-
     override func tableView(tableView: UITableView?, numberOfRowsInSection section: Int) -> Int {
-        var number = 0
-        
+
         //if already set items, get count
-        if let conta = self.redditData.items?.count {
-            number = conta
+        if let items_count = self.redditData.items?.count {
+            return items_count
         }
-        
-        return number
+        else {
+            return 0
+        }
     }
 
     override func tableView(tableView: UITableView?, cellForRowAtIndexPath indexPath: NSIndexPath?) -> UITableViewCell? {
 
         //TODO: recycle cells
         
-        let cell = UITableViewCell(frame: CGRectMake(0, 0, 320, 50))
-        cell.text = self.redditData.titleForIndex(indexPath!.item)
+        let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: nil)
+        
+        if let data = self.redditData.dataForIndex(indexPath!.item) {
+            cell.textLabel.text = data["title"] as String
+            
+            if data["thumbnail"] as String != "" {
+                cell.imageView.image = UIImage(named: "loading.png")
+                
+                //TODO: baixar imagem em background e mostrar posteriormente
+            }
+        }
         
         return cell
     }
     
-    /*
-    // #pragma mark - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue?, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
+    // #pragma mark - Table view delegate
+    
+    override func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!) {
+        if let data = self.redditData.dataForIndex(indexPath!.item) {
+            let url = NSURL(string: data["url"] as String)
+            
+            //TODO: abrir WebView ao invés de abrir Safari
+            UIApplication.sharedApplication().openURL(url)
+        }
     }
-    */
 
 }
