@@ -10,7 +10,7 @@ import UIKit
 
 class MainViewController: UITableViewController, UITableViewDelegate {
 
-    let redditData : RedditData = RedditData();
+    let reddit : RedditManager = RedditManager();
     
     init(coder aDecoder: NSCoder!) {
 
@@ -46,16 +46,20 @@ class MainViewController: UITableViewController, UITableViewDelegate {
     
     func requestedRefresh() {
         
-        func reloadInterface() {
+        func reloadInterface(success: Bool) {
             // chama na thread principal
             dispatch_after(0, dispatch_get_main_queue(), {
-                // atualiza a tabela
-                self.tableView.reloadData()
+                
+                if success {
+                    // atualiza a tabela
+                    self.tableView.reloadData()
+                }
+                
                 self.refreshControl.endRefreshing()
             })
         }
         
-        self.redditData.reloadData(reloadInterface)
+        self.reddit.reloadData(reloadInterface)
     }
 
     // #pragma mark - Table view data source
@@ -63,7 +67,7 @@ class MainViewController: UITableViewController, UITableViewDelegate {
     override func tableView(tableView: UITableView?, numberOfRowsInSection section: Int) -> Int {
 
         //if already set items, get count
-        if let items_count = self.redditData.items?.count {
+        if let items_count = self.reddit.items?.count {
             return items_count
         }
         else {
@@ -73,32 +77,44 @@ class MainViewController: UITableViewController, UITableViewDelegate {
 
     override func tableView(tableView: UITableView?, cellForRowAtIndexPath indexPath: NSIndexPath?) -> UITableViewCell? {
 
-        //TODO: recycle cells
+        let identifier = "CustomTableCell"
+        var cell : CustomCellTableViewCell
         
-        let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: nil)
+        if let reusedCell = tableView?.dequeueReusableCellWithIdentifier(identifier) as? CustomCellTableViewCell {
+            cell = reusedCell
+        }
+        else {
+            let nib = NSBundle.mainBundle().loadNibNamed("CustomTableCell", owner: self, options: nil)
+            cell = nib[0] as CustomCellTableViewCell
+        }
         
-        if let data = self.redditData.dataForIndex(indexPath!.item) {
-            cell.textLabel.text = data["title"] as String
-            
-            if data["thumbnail"] as String != "" {
-                cell.imageView.image = UIImage(named: "loading.png")
-                
-                //TODO: baixar imagem em background e mostrar posteriormente
-            }
+        if let data = self.reddit.dataForIndex(indexPath!.item) {
+            cell.formatCell(data)
         }
         
         return cell
     }
     
+    override func tableView(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+        return 80
+    }
+    
     // #pragma mark - Table view delegate
     
+    var currentLinkInfo : LinkInfo?
+    
     override func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!) {
-        if let data = self.redditData.dataForIndex(indexPath!.item) {
-            let url = NSURL(string: data["url"] as String)
-            
-            //TODO: abrir WebView ao invés de abrir Safari
-            UIApplication.sharedApplication().openURL(url)
+        if let data = self.reddit.dataForIndex(indexPath!.item) {
+            currentLinkInfo = data
+            performSegueWithIdentifier("showLink", sender: self)
         }
+    }
+    
+    // #pragma mark - navigation
+    
+    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
+        let controller = segue.destinationViewController as LinkViewController
+        controller.linkInfo = currentLinkInfo
     }
 
 }
