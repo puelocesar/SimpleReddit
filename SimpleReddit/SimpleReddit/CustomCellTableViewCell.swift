@@ -12,8 +12,10 @@ class CustomCellTableViewCell: UITableViewCell, ThumbnailLoadDelegate {
 
     @IBOutlet var thumbnail: UIImageView
     @IBOutlet var title: UILabel
-    @IBOutlet var comments: UILabel
     @IBOutlet var activityIndicator: UIActivityIndicatorView
+    
+    @IBOutlet var upvotes: UILabel
+    @IBOutlet var downvotes: UILabel
     
     init(style: UITableViewCellStyle, reuseIdentifier: String) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -26,7 +28,8 @@ class CustomCellTableViewCell: UITableViewCell, ThumbnailLoadDelegate {
         self.linkInfo = linkInfo
         
         title.text = linkInfo.title
-        comments.text = String(linkInfo.comments) + " comments"
+        upvotes.text = String(linkInfo.ups)
+        downvotes.text = String(linkInfo.downs)
         
         if linkInfo.hasThumbnail() {
             linkInfo.delegate = self
@@ -36,8 +39,7 @@ class CustomCellTableViewCell: UITableViewCell, ThumbnailLoadDelegate {
             activityIndicator.hidden = true
             thumbnail.hidden = true
             
-            title.frame = CGRectMake(20, 5, 280, 45)
-            comments.frame = CGRectMake(20, 58, 100, 21)
+            title.frame = CGRectMake(60, 5, 250, 70)
         }
     }
     

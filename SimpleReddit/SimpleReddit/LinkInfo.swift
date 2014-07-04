@@ -20,7 +20,8 @@ class LinkInfo: NSObject {
         url = dict["url"] as String
         thumbnail = dict["thumbnail"] as String
         comments = dict["num_comments"] as Int
-        score = dict["score"] as Int
+        ups = dict["ups"] as Int
+        downs = dict["downs"] as Int
         
         super.init()
     }
@@ -30,7 +31,8 @@ class LinkInfo: NSObject {
     let url : String
     let thumbnail : String
     let comments : Int
-    let score : Int
+    let ups : Int
+    let downs : Int
     
     var thumbnail_image : UIImage?
     var delegate : ThumbnailLoadDelegate?

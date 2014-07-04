@@ -63,9 +63,8 @@ class MainViewController: UITableViewController, UITableViewDelegate {
     }
 
     // #pragma mark - Table view data source
-
-    override func tableView(tableView: UITableView?, numberOfRowsInSection section: Int) -> Int {
-
+    
+    override func numberOfSectionsInTableView(tableView: UITableView!) -> Int {
         //if already set items, get count
         if let items_count = self.reddit.items?.count {
             return items_count
@@ -75,33 +74,60 @@ class MainViewController: UITableViewController, UITableViewDelegate {
         }
     }
 
+    override func tableView(tableView: UITableView?, numberOfRowsInSection section: Int) -> Int {
+        return 2;
+    }
+
     override func tableView(tableView: UITableView?,
         cellForRowAtIndexPath indexPath: NSIndexPath?) -> UITableViewCell? {
 
-        let identifier = "CustomTableCell"
-        var cell : CustomCellTableViewCell
-        
-        if let reusedCell = tableView?.dequeueReusableCellWithIdentifier(identifier) as? CustomCellTableViewCell {
-            cell = reusedCell
+        if (indexPath?.row == 1) {
+            
+            var cell : UITableViewCell
+            
+            if let reusedCell = tableView?.dequeueReusableCellWithIdentifier("CommentsCell") as? UITableViewCell {
+                cell = reusedCell
+            }
+            else {
+                cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "CommentsCell")
+                cell.textLabel.font = UIFont(name: "HelveticaNeue-Light", size: 14)
+            }
+            
+            if let linkInfo = self.reddit.dataForIndex(indexPath!.section) {
+                cell.textLabel.text = String(linkInfo.comments) + " comments"
+            }
+            
+            return cell
         }
         else {
-            let nib = NSBundle.mainBundle().loadNibNamed("CustomTableCell",
-                owner: self, options: nil)
-            cell = nib[0] as CustomCellTableViewCell
+            var cell : CustomCellTableViewCell
+            
+            if let reusedCell = tableView?.dequeueReusableCellWithIdentifier("CustomTableCell") as? CustomCellTableViewCell {
+                cell = reusedCell
+            }
+            else {
+                let nib = NSBundle.mainBundle().loadNibNamed("CustomTableCell",
+                    owner: self, options: nil)
+                cell = nib[0] as CustomCellTableViewCell
+            }
+            
+            if let linkInfo = self.reddit.dataForIndex(indexPath!.section) {
+                cell.formatCell(linkInfo, indexPath: indexPath!)
+            }
+            
+            return cell
         }
-        
-        if let linkInfo = self.reddit.dataForIndex(indexPath!.row) {
-            //linkInfo.delegate = self
-            cell.formatCell(linkInfo, indexPath: indexPath!)
-        }
-        
-        return cell
     }
     
     override func tableView(tableView: UITableView!,
         heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
-            
-        return 80
+        
+        if (indexPath.row == 0) {
+            return 80
+        }
+        else {
+            return 30
+        }
     }
     
     // #pragma mark - Table view delegate
@@ -111,9 +137,16 @@ class MainViewController: UITableViewController, UITableViewDelegate {
     override func tableView(tableView: UITableView!,
         didSelectRowAtIndexPath indexPath: NSIndexPath!) {
             
-        if let data = self.reddit.dataForIndex(indexPath!.row) {
+        if let data = self.reddit.dataForIndex(indexPath!.section) {
             currentLinkInfo = data
-            performSegueWithIdentifier("showLink", sender: self)
+            
+            if (indexPath!.row == 0) {
+                performSegueWithIdentifier("showLink", sender: self)
+            }
+            else {
+                println("comments")
+                self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            }
         }
     }
     
