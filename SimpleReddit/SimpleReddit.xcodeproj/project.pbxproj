@@ -19,6 +19,10 @@
 		3AE352911965EC9D0057E77B /* CustomTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AE352901965EC9D0057E77B /* CustomTableCell.xib */; };
 		3AE352931965ED7C0057E77B /* CustomCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE352921965ED7C0057E77B /* CustomCellTableViewCell.swift */; };
 		3AE352951965FB0B0057E77B /* LinkInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE352941965FB0B0057E77B /* LinkInfo.swift */; };
+		3AE352971966D84C0057E77B /* CommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE352961966D84C0057E77B /* CommentsViewController.swift */; };
+		3AE352991966DAAB0057E77B /* CommentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE352981966DAAB0057E77B /* CommentsTests.swift */; };
+		3AE3529B1966DC940057E77B /* RefreshExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE3529A1966DC940057E77B /* RefreshExtension.swift */; };
+		3AE3529D1966DF780057E77B /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE3529C1966DF780057E77B /* Comment.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +52,10 @@
 		3AE352901965EC9D0057E77B /* CustomTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomTableCell.xib; sourceTree = "<group>"; };
 		3AE352921965ED7C0057E77B /* CustomCellTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCellTableViewCell.swift; sourceTree = "<group>"; };
 		3AE352941965FB0B0057E77B /* LinkInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkInfo.swift; sourceTree = "<group>"; };
+		3AE352961966D84C0057E77B /* CommentsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsViewController.swift; sourceTree = "<group>"; };
+		3AE352981966DAAB0057E77B /* CommentsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsTests.swift; sourceTree = "<group>"; };
+		3AE3529A1966DC940057E77B /* RefreshExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefreshExtension.swift; sourceTree = "<group>"; };
+		3AE3529C1966DF780057E77B /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +110,9 @@
 				3AE3528E1965DA6F0057E77B /* LinkViewController.swift */,
 				3AE352921965ED7C0057E77B /* CustomCellTableViewCell.swift */,
 				3AE352941965FB0B0057E77B /* LinkInfo.swift */,
+				3AE352961966D84C0057E77B /* CommentsViewController.swift */,
+				3AE3529A1966DC940057E77B /* RefreshExtension.swift */,
+				3AE3529C1966DF780057E77B /* Comment.swift */,
 			);
 			path = SimpleReddit;
 			sourceTree = "<group>";
@@ -118,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				3A166EBE196462E4003307A7 /* SimpleRedditTests.swift */,
+				3AE352981966DAAB0057E77B /* CommentsTests.swift */,
 				3A166EBC196462E4003307A7 /* Supporting Files */,
 			);
 			path = SimpleRedditTests;
@@ -242,9 +254,12 @@
 			files = (
 				3AE3528F1965DA6F0057E77B /* LinkViewController.swift in Sources */,
 				3A166EAA196462E3003307A7 /* AppDelegate.swift in Sources */,
+				3AE352971966D84C0057E77B /* CommentsViewController.swift in Sources */,
 				3A166ECA1964892B003307A7 /* RedditManager.swift in Sources */,
 				3AE352931965ED7C0057E77B /* CustomCellTableViewCell.swift in Sources */,
+				3AE3529B1966DC940057E77B /* RefreshExtension.swift in Sources */,
 				3A166ECE1964A47C003307A7 /* MainViewController.swift in Sources */,
+				3AE3529D1966DF780057E77B /* Comment.swift in Sources */,
 				3AE352951965FB0B0057E77B /* LinkInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -254,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A166EBF196462E4003307A7 /* SimpleRedditTests.swift in Sources */,
+				3AE352991966DAAB0057E77B /* CommentsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

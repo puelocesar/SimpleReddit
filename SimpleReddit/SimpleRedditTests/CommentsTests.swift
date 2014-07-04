@@ -1,16 +1,16 @@
 //
-//  SimpleRedditTests.swift
-//  SimpleRedditTests
+//  CommentsTests.swift
+//  SimpleReddit
 //
-//  Created by Paulo Cesar Ferreira on 02/07/14.
+//  Created by Paulo Cesar Ferreira on 04/07/14.
 //  Copyright (c) 2014 Paulo Cesar Ferreira. All rights reserved.
 //
 
 import XCTest
 import SimpleReddit
 
-class SimpleRedditTests: XCTestCase {
-    
+class CommentsTests: XCTestCase {
+
     let reddit = RedditManager();
     var waitAsyncTask = true
     
@@ -21,7 +21,7 @@ class SimpleRedditTests: XCTestCase {
             waitAsyncTask = false
         }
         
-        reddit.retrieveLinks(afterTest)
+        reddit.retrieveCommentsForId("291oo0", onResult: afterTest)
         
         //necessário pois o sistema de testes ignora tasks assíncronas
         while waitAsyncTask {
@@ -30,19 +30,7 @@ class SimpleRedditTests: XCTestCase {
         }
     }
     
-    func testRedditHasItems() {
-        XCTAssert(reddit.items?.count > 0, "items are ok")
+    func testHasComments() {
+        XCTAssert(reddit.comments?.count > 0, "comments are ok")
     }
-    
-    func testItemsAreOk() {
-        let data : LinkInfo? = reddit.dataForIndex(0)
-        XCTAssertNotNil(data?.title, "data has title")
-    }
-    
-    func testImageLoadSpeed() {
-        measureBlock({
-            let data : LinkInfo? = self.reddit.dataForIndex(0)
-        })
-    }
-    
 }

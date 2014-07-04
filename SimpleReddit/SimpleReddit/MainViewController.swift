@@ -13,7 +13,6 @@ class MainViewController: UITableViewController, UITableViewDelegate {
     let reddit : RedditManager = RedditManager();
     
     init(coder aDecoder: NSCoder!) {
-
         super.init(coder: aDecoder)
     }
 
@@ -30,42 +29,13 @@ class MainViewController: UITableViewController, UITableViewDelegate {
         super.didReceiveMemoryWarning()
     }
     
-    func setupRefreshControl() {
-        let refreshControl = UIRefreshControl()
-        
-        refreshControl.addTarget(self, action: Selector("requestedRefresh"), forControlEvents: UIControlEvents.ValueChanged)
-        refreshControl.attributedTitle = NSAttributedString(string: "retrieving posts")
-        
-        self.refreshControl = refreshControl
-        
-        //beginRefreshing não chama o refresh adequadamente, por isso temos o setContentOffset
-        self.refreshControl.beginRefreshing()
-        self.tableView.setContentOffset(CGPointMake(0, self.tableView.contentOffset.y-self.refreshControl.frame.size.height), animated: true)
-        self.refreshControl.sendActionsForControlEvents(UIControlEvents.ValueChanged)
-    }
-    
     func requestedRefresh() {
-        
-        func reloadInterface(success: Bool) {
-            // chama na thread principal
-            dispatch_after(0, dispatch_get_main_queue(), {
-                
-                if success {
-                    // atualiza a tabela
-                    self.tableView.reloadData()
-                }
-                
-                self.refreshControl.endRefreshing()
-            })
-        }
-        
-        self.reddit.reloadData(reloadInterface)
+        self.reddit.retrieveLinks(endRefresh)
     }
 
     // #pragma mark - Table view data source
     
     override func numberOfSectionsInTableView(tableView: UITableView!) -> Int {
-        //if already set items, get count
         if let items_count = self.reddit.items?.count {
             return items_count
         }
@@ -140,21 +110,31 @@ class MainViewController: UITableViewController, UITableViewDelegate {
         if let data = self.reddit.dataForIndex(indexPath!.section) {
             currentLinkInfo = data
             
+            var identifier : String
+            
             if (indexPath!.row == 0) {
-                performSegueWithIdentifier("showLink", sender: self)
+                identifier = "showLink"
             }
             else {
-                println("comments")
-                self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                identifier = "showComments"
             }
+            
+            performSegueWithIdentifier(identifier, sender: self)
+            self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
     }
     
     // #pragma mark - navigation
     
     override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
-        let controller = segue.destinationViewController as LinkViewController
-        controller.linkInfo = currentLinkInfo
+        if (segue.identifier == "showLink") {
+            let controller = segue.destinationViewController as LinkViewController
+            controller.linkInfo = currentLinkInfo
+        }
+        else {
+            let controller = segue.destinationViewController as CommentsViewController
+            controller.commentId = currentLinkInfo!.id
+        }
     }
     
 }
