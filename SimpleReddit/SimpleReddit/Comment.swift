@@ -36,6 +36,14 @@ class Comment: NSObject {
         }
     }
     
+    init() {
+        id = ""
+        body = ""
+        author = ""
+        score = 0
+        replies = []
+    }
+    
     let id : String
     let author : String
     let body : String

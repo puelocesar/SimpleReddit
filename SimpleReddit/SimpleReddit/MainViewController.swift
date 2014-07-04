@@ -63,7 +63,7 @@ class MainViewController: UITableViewController, UITableViewDelegate {
                 cell.textLabel.font = UIFont(name: "HelveticaNeue-Light", size: 14)
             }
             
-            if let linkInfo = self.reddit.dataForIndex(indexPath!.section) {
+            if let linkInfo = self.reddit.linkInfoForIndex(indexPath!.section) {
                 cell.textLabel.text = String(linkInfo.comments) + " comments"
             }
             
@@ -81,7 +81,7 @@ class MainViewController: UITableViewController, UITableViewDelegate {
                 cell = nib[0] as CustomCellTableViewCell
             }
             
-            if let linkInfo = self.reddit.dataForIndex(indexPath!.section) {
+            if let linkInfo = self.reddit.linkInfoForIndex(indexPath!.section) {
                 cell.formatCell(linkInfo, indexPath: indexPath!)
             }
             
@@ -107,7 +107,7 @@ class MainViewController: UITableViewController, UITableViewDelegate {
     override func tableView(tableView: UITableView!,
         didSelectRowAtIndexPath indexPath: NSIndexPath!) {
             
-        if let data = self.reddit.dataForIndex(indexPath!.section) {
+        if let data = self.reddit.linkInfoForIndex(indexPath!.section) {
             currentLinkInfo = data
             
             var identifier : String

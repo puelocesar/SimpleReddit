@@ -45,7 +45,7 @@ class CommentsViewController: UITableViewController {
 
     override func tableView(tableView: UITableView?, numberOfRowsInSection section: Int) -> Int {
         
-        if let comment = self.reddit.commentDataForIndex(section) {
+        if let comment = self.reddit.commentForIndex(section) {
             return 1 + comment.replies.count
         }
         
@@ -55,30 +55,41 @@ class CommentsViewController: UITableViewController {
     override func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
         
         var cell : UITableViewCell
+        var identifier : String
         
         if indexPath!.row == 0 {
-            if let reusedCell = tableView?.dequeueReusableCellWithIdentifier("commentCell") as? CommentCell {
-                cell = reusedCell
-            }
-            else {
+            identifier = "commentCell"
+        }
+        else {
+            identifier = "subcomment"
+        }
+        
+        if let reusedCell = tableView?.dequeueReusableCellWithIdentifier(identifier) as? UITableViewCell {
+            cell = reusedCell
+        }
+        else {
+            if indexPath!.row == 0 {
                 let nib = NSBundle.mainBundle().loadNibNamed("CommentTableCell", owner: self, options: nil)
                 cell = nib[0] as CommentCell
             }
-        }
-        else {
-            cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: nil)
-            cell.textLabel.font = UIFont(name: "HelveticaNeue-Light", size: 9)
-            cell.textLabel.numberOfLines = 3
+            else {
+                cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: identifier)
+                cell.textLabel.font = UIFont(name: "HelveticaNeue-Light", size: 9)
+                cell.textLabel.numberOfLines = 3
+            }
         }
         
-        if let comment = self.reddit.commentDataForIndex(indexPath!.section) {
+        if let comment = self.reddit.commentForIndex(indexPath!.section) {
             if indexPath!.row == 0 {
                 (cell as CommentCell).formatCell(comment)
             }
             else {
                 let reply = comment.replies[indexPath!.row-1]
-                cell.textLabel.text = "\(reply.score) - \(reply.author): \(reply.body)"
+                cell.textLabel.text = "(\(reply.score)) \(reply.author): \(reply.body)"
             }
+        }
+        else {
+            (cell as CommentCell).cleanCell()
         }
         
         return cell

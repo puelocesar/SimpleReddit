@@ -86,11 +86,21 @@
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </webView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="hXI-Ez-c3a">
+                                <rect key="frame" x="222" y="221" width="37" height="37"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="37" id="Mwq-pS-nXe"/>
+                                    <constraint firstAttribute="width" constant="37" id="pj2-Lo-xeR"/>
+                                </constraints>
+                                <color key="color" red="0.1311035156" green="0.046577695920000002" blue="0.031053344060000002" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="centerY" secondItem="hXI-Ez-c3a" secondAttribute="centerY" id="0eH-U8-Vrv"/>
                             <constraint firstAttribute="bottom" secondItem="xNq-na-Bgz" secondAttribute="bottom" id="6oU-mB-Od9"/>
                             <constraint firstAttribute="trailing" secondItem="xNq-na-Bgz" secondAttribute="trailing" id="KCc-LT-GBh"/>
+                            <constraint firstAttribute="centerX" secondItem="hXI-Ez-c3a" secondAttribute="centerX" id="aqc-Db-S7H"/>
                             <constraint firstItem="xNq-na-Bgz" firstAttribute="top" secondItem="MMQ-IT-qOo" secondAttribute="top" id="sEE-w2-rfA"/>
                             <constraint firstItem="xNq-na-Bgz" firstAttribute="leading" secondItem="MMQ-IT-qOo" secondAttribute="leading" id="sRd-3l-HJJ"/>
                         </constraints>
@@ -100,6 +110,7 @@
                         <barButtonItem key="backBarButtonItem" title="back" id="3xj-oM-MgK"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="activityIndicator" destination="hXI-Ez-c3a" id="mdy-JR-9AY"/>
                         <outlet property="webview" destination="xNq-na-Bgz" id="f8V-4Q-3Eh"/>
                     </connections>
                 </viewController>

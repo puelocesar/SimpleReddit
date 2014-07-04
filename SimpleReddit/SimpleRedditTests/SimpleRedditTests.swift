@@ -35,13 +35,13 @@ class SimpleRedditTests: XCTestCase {
     }
     
     func testItemsAreOk() {
-        let data : LinkInfo? = reddit.dataForIndex(0)
+        let data : LinkInfo? = reddit.linkInfoForIndex(0)
         XCTAssertNotNil(data?.title, "data has title")
     }
     
     func testImageLoadSpeed() {
         measureBlock({
-            let data : LinkInfo? = self.reddit.dataForIndex(0)
+            let data : LinkInfo? = self.reddit.linkInfoForIndex(0)
         })
     }
     

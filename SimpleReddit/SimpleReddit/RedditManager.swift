@@ -39,7 +39,7 @@ class RedditManager {
         task.resume()
     }
     
-    func dataForIndex(index : Int) -> LinkInfo? {
+    func linkInfoForIndex(index : Int) -> LinkInfo? {
         if let array = self.items {
             if let data = array[index]!["data"] as? NSDictionary {
                 return LinkInfo(dict: data)
@@ -73,7 +73,7 @@ class RedditManager {
         task.resume()
     }
     
-    func commentDataForIndex(index : Int) -> Comment? {
+    func commentForIndex(index : Int) -> Comment? {
         if let array = self.comments {
             if let data = array[index]!["data"] as? NSDictionary {
                 if array[index]!["kind"] as String == "more" {

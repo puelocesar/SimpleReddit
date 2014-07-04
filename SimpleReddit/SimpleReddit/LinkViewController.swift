@@ -8,9 +8,11 @@
 
 import UIKit
 
-class LinkViewController: UIViewController {
+class LinkViewController: UIViewController, UIWebViewDelegate {
 
     @IBOutlet var webview: UIWebView
+    @IBOutlet var activityIndicator: UIActivityIndicatorView
+    
     var linkInfo : LinkInfo?
     
     init(coder aDecoder: NSCoder!) {
@@ -22,10 +24,17 @@ class LinkViewController: UIViewController {
 
         let url = NSURLRequest(URL: NSURL(string: linkInfo?.url))
         webview.loadRequest(url)
+        webview.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
+    
+    
+    func webViewDidFinishLoad(webView: UIWebView!) {
+        UIView.animateWithDuration(0.2, animations: {
+           self.activityIndicator.alpha = 0
+        })
+    }
 }

@@ -23,5 +23,9 @@ class CommentCell: UITableViewCell {
         body.text = comment.body
         score.text = String(comment.score)
     }
+    
+    func cleanCell() {
+        hidden = true
+    }
 
 }
