@@ -75,7 +75,8 @@ class MainViewController: UITableViewController, UITableViewDelegate {
         }
     }
 
-    override func tableView(tableView: UITableView?, cellForRowAtIndexPath indexPath: NSIndexPath?) -> UITableViewCell? {
+    override func tableView(tableView: UITableView?,
+        cellForRowAtIndexPath indexPath: NSIndexPath?) -> UITableViewCell? {
 
         let identifier = "CustomTableCell"
         var cell : CustomCellTableViewCell
@@ -84,18 +85,22 @@ class MainViewController: UITableViewController, UITableViewDelegate {
             cell = reusedCell
         }
         else {
-            let nib = NSBundle.mainBundle().loadNibNamed("CustomTableCell", owner: self, options: nil)
+            let nib = NSBundle.mainBundle().loadNibNamed("CustomTableCell",
+                owner: self, options: nil)
             cell = nib[0] as CustomCellTableViewCell
         }
         
-        if let data = self.reddit.dataForIndex(indexPath!.item) {
-            cell.formatCell(data)
+        if let linkInfo = self.reddit.dataForIndex(indexPath!.row) {
+            //linkInfo.delegate = self
+            cell.formatCell(linkInfo, indexPath: indexPath!)
         }
         
         return cell
     }
     
-    override func tableView(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+    override func tableView(tableView: UITableView!,
+        heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+            
         return 80
     }
     
@@ -103,8 +108,10 @@ class MainViewController: UITableViewController, UITableViewDelegate {
     
     var currentLinkInfo : LinkInfo?
     
-    override func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!) {
-        if let data = self.reddit.dataForIndex(indexPath!.item) {
+    override func tableView(tableView: UITableView!,
+        didSelectRowAtIndexPath indexPath: NSIndexPath!) {
+            
+        if let data = self.reddit.dataForIndex(indexPath!.row) {
             currentLinkInfo = data
             performSegueWithIdentifier("showLink", sender: self)
         }
@@ -116,5 +123,5 @@ class MainViewController: UITableViewController, UITableViewDelegate {
         let controller = segue.destinationViewController as LinkViewController
         controller.linkInfo = currentLinkInfo
     }
-
+    
 }

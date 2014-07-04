@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CustomCellTableViewCell: UITableViewCell {
+class CustomCellTableViewCell: UITableViewCell, ThumbnailLoadDelegate {
 
     @IBOutlet var thumbnail: UIImageView
     @IBOutlet var title: UILabel
@@ -17,26 +17,40 @@ class CustomCellTableViewCell: UITableViewCell {
     
     init(style: UITableViewCellStyle, reuseIdentifier: String) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        // Initialization code
-    }
-
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
     
-    func formatCell(data: LinkInfo) {
-        title.text = data.title
-        comments.text = String(data.comments) + " comments"
+    var linkInfo : LinkInfo?
+    
+    func formatCell(linkInfo: LinkInfo, indexPath: NSIndexPath) {
         
-        if data.thumbnail == "" {
+        self.linkInfo = linkInfo
+        
+        title.text = linkInfo.title
+        comments.text = String(linkInfo.comments) + " comments"
+        
+        if linkInfo.hasThumbnail() {
+            linkInfo.delegate = self
+            linkInfo.loadImage()
+        }
+        else {
             activityIndicator.hidden = true
             thumbnail.hidden = true
             
             title.frame = CGRectMake(20, 5, 280, 45)
             comments.frame = CGRectMake(20, 58, 100, 21)
         }
+    }
+    
+    func thumbnailFinished() {
+        dispatch_sync(dispatch_get_main_queue(), {
+            if let image = self.linkInfo?.thumbnail_image {
+                self.thumbnail.image = image
+                
+                UIView.animateWithDuration(0.2, animations: {
+                    self.activityIndicator.alpha = 0
+                    self.thumbnail.alpha = 1 })
+            }
+        })
     }
 
 }

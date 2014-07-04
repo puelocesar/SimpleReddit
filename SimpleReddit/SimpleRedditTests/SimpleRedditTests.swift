@@ -17,7 +17,7 @@ class SimpleRedditTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        func afterTest() {
+        func afterTest(success: Bool) {
             waitAsyncTask = false
         }
         
@@ -37,6 +37,12 @@ class SimpleRedditTests: XCTestCase {
     func testItemsAreOk() {
         let data : LinkInfo? = reddit.dataForIndex(0)
         XCTAssertNotNil(data?.title, "data has title")
+    }
+    
+    func testImageLoadSpeed() {
+        measureBlock({
+            let data : LinkInfo? = self.reddit.dataForIndex(0)
+        })
     }
     
 }
