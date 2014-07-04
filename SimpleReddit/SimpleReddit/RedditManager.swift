@@ -51,7 +51,7 @@ class RedditManager {
     
     func retrieveCommentsForId(id: String, onResult: Bool -> Void) {
         
-        let url = NSURL(string: "http://www.reddit.com/comments/\(id).json")
+        let url = NSURL(string: "http://www.reddit.com/comments/\(id).json?depth=2")
         
         let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
             
@@ -80,7 +80,7 @@ class RedditManager {
                     return nil
                 }
                 else {
-                    return Comment(dict: data)
+                    return Comment(dict: data, loadReplies: true)
                 }
             }
         }

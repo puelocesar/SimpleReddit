@@ -9,20 +9,36 @@
 import UIKit
 
 class Comment: NSObject {
-    init(dict : NSDictionary) {
+    init(dict : NSDictionary, loadReplies: Bool) {
         
         id = dict["id"] as String
         body = dict["body"] as String
-        ups = dict["ups"] as Int
-        downs = dict["downs"] as Int
-        comments = []
+        author = dict["author"] as String
+        score = dict["score"] as Int
+        replies = []
         
         super.init()
+        
+        if loadReplies {
+            if let replies = dict["replies"] as? NSDictionary {
+                
+                let children = replies["data"]!["children"] as NSArray
+            
+                for child : AnyObject in children {
+                    if child["kind"] as String != "more" {                    
+                        if let data = child["data"] as? NSDictionary {
+                            let comment = Comment(dict: data, loadReplies: false)
+                            self.replies.append(comment)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     let id : String
+    let author : String
     let body : String
-    let comments : NSArray
-    let ups : Int
-    let downs : Int
+    let replies : Array<Comment>
+    let score : Int
 }
