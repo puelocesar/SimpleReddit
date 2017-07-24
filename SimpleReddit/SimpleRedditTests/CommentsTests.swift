@@ -17,7 +17,7 @@ class CommentsTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        func afterTest(success: Bool) {
+        func afterTest(_ success: Bool) {
             waitAsyncTask = false
         }
         
@@ -25,12 +25,12 @@ class CommentsTests: XCTestCase {
         
         //necessário pois o sistema de testes ignora tasks assíncronas
         while waitAsyncTask {
-            NSRunLoop.currentRunLoop().runMode(NSDefaultRunLoopMode,
-                beforeDate: NSDate(timeIntervalSinceNow: 0.1))
+            RunLoop.current.run(mode: RunLoopMode.defaultRunLoopMode,
+                before: Date(timeIntervalSinceNow: 0.1))
         }
     }
     
     func testHasComments() {
-        XCTAssert(reddit.comments?.count > 0, "comments are ok")
+        XCTAssert((reddit.comments?.count)! > 0, "comments are ok")
     }
 }

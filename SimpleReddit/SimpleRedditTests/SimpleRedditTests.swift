@@ -17,7 +17,7 @@ class SimpleRedditTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        func afterTest(success: Bool) {
+        func afterTest(_ success: Bool) {
             waitAsyncTask = false
         }
         
@@ -25,13 +25,13 @@ class SimpleRedditTests: XCTestCase {
         
         //necessário pois o sistema de testes ignora tasks assíncronas
         while waitAsyncTask {
-            NSRunLoop.currentRunLoop().runMode(NSDefaultRunLoopMode,
-                beforeDate: NSDate(timeIntervalSinceNow: 0.1))
+            RunLoop.current.run(mode: RunLoopMode.defaultRunLoopMode,
+                before: Date(timeIntervalSinceNow: 0.1))
         }
     }
     
     func testRedditHasItems() {
-        XCTAssert(reddit.items?.count > 0, "items are ok")
+        XCTAssert((reddit.items?.count)! > 0, "items are ok")
     }
     
     func testItemsAreOk() {
@@ -40,8 +40,8 @@ class SimpleRedditTests: XCTestCase {
     }
     
     func testImageLoadSpeed() {
-        measureBlock({
-            let data : LinkInfo? = self.reddit.linkInfoForIndex(0)
+        measure({
+            let _ : LinkInfo? = self.reddit.linkInfoForIndex(0)
         })
     }
     

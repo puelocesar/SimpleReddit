@@ -10,47 +10,44 @@ import UIKit
 
 class CustomCellTableViewCell: UITableViewCell, ThumbnailLoadDelegate {
 
-    @IBOutlet var thumbnail: UIImageView
-    @IBOutlet var title: UILabel
-    @IBOutlet var activityIndicator: UIActivityIndicatorView
+    @IBOutlet var thumbnail: UIImageView?
+    @IBOutlet var title: UILabel?
+    @IBOutlet var activityIndicator: UIActivityIndicatorView?
     
-    @IBOutlet var upvotes: UILabel
-    @IBOutlet var downvotes: UILabel
+    @IBOutlet var upvotes: UILabel?
+    @IBOutlet var downvotes: UILabel?
     
-    init(style: UITableViewCellStyle, reuseIdentifier: String) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-    }
     
     var linkInfo : LinkInfo?
     
-    func formatCell(linkInfo: LinkInfo, indexPath: NSIndexPath) {
+    func formatCell(_ linkInfo: LinkInfo, indexPath: IndexPath) {
         
         self.linkInfo = linkInfo
         
-        title.text = linkInfo.title
-        upvotes.text = String(linkInfo.ups)
-        downvotes.text = String(linkInfo.downs)
+        title?.text = linkInfo.title
+        upvotes?.text = String(linkInfo.ups)
+        downvotes?.text = String(linkInfo.downs)
         
         if linkInfo.hasThumbnail() {
             linkInfo.delegate = self
             linkInfo.loadImage()
         }
         else {
-            activityIndicator.hidden = true
-            thumbnail.hidden = true
+            activityIndicator?.isHidden = true
+            thumbnail?.isHidden = true
             
-            title.frame = CGRectMake(60, 5, 250, 70)
+            title?.frame = CGRect(x: 60, y: 5, width: 250, height: 70)
         }
     }
     
     func thumbnailFinished() {
-        dispatch_sync(dispatch_get_main_queue(), {
+        DispatchQueue.main.sync(execute: {
             if let image = self.linkInfo?.thumbnail_image {
-                self.thumbnail.image = image
+                self.thumbnail?.image = image
                 
-                UIView.animateWithDuration(0.2, animations: {
-                    self.activityIndicator.alpha = 0
-                    self.thumbnail.alpha = 1 })
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.activityIndicator?.alpha = 0
+                    self.thumbnail?.alpha = 1 })
             }
         })
     }

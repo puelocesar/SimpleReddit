@@ -11,24 +11,24 @@ import UIKit
 extension UITableViewController {
     
     func setupRefreshControl() {
-        self.refreshControl.addTarget(self, action: Selector("requestedRefresh"), forControlEvents: UIControlEvents.ValueChanged)
+        self.refreshControl?.addTarget(self, action: Selector("requestedRefresh"), for: UIControlEvents.valueChanged)
         
         //beginRefreshing não chama o refresh adequadamente, por isso temos o setContentOffset
-        self.refreshControl.beginRefreshing()
-        self.tableView.setContentOffset(CGPointMake(0, self.tableView.contentOffset.y-self.refreshControl.frame.size.height), animated: true)
-        self.refreshControl.sendActionsForControlEvents(UIControlEvents.ValueChanged)
+        self.refreshControl?.beginRefreshing()
+        self.tableView.setContentOffset(CGPoint(x: 0, y: self.tableView.contentOffset.y-(self.refreshControl?.frame.size.height)!), animated: true)
+        self.refreshControl?.sendActions(for: UIControlEvents.valueChanged)
     }
     
-    func endRefresh(success: Bool) {
+    func endRefresh(_ success: Bool) {
         // chama na thread principal
-        dispatch_after(0, dispatch_get_main_queue(), {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now(), execute: {
             
             if success {
                 // atualiza a tabela
                 self.tableView.reloadData()
             }
             
-            self.refreshControl.endRefreshing()
+            self.refreshControl?.endRefreshing()
         })
     }
 }

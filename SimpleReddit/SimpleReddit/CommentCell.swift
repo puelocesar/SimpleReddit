@@ -10,22 +10,19 @@ import UIKit
 
 class CommentCell: UITableViewCell {
 
-    @IBOutlet var author: UILabel
-    @IBOutlet var body: UILabel
-    @IBOutlet var score: UILabel
+    @IBOutlet var author: UILabel?
+    @IBOutlet var body: UILabel?
+    @IBOutlet var score: UILabel?
     
-    init(style: UITableViewCellStyle, reuseIdentifier: String) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-    }
     
-    func formatCell(comment: Comment) {
-        author.text = comment.author
-        body.text = comment.body
-        score.text = String(comment.score)
+    func formatCell(_ comment: Comment) {
+        author?.text = comment.author
+        body?.text = comment.body
+        score?.text = String(comment.score)
     }
     
     func cleanCell() {
-        hidden = true
+        isHidden = true
     }
 
 }

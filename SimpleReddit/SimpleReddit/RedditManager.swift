@@ -10,27 +10,29 @@ import UIKit
 
 class RedditManager {
     
-    var items: NSArray?
-    var comments: NSArray?
+    var items: [[String: Any]]?
+    var comments: [[String: Any]]?
     
     init () {}
     
-    func retrieveLinks(onResult: Bool -> Void) {
+    func retrieveLinks(_ onResult: @escaping (Bool) -> Void) {
         
-        let url = NSURL(string: "http://www.reddit.com/hot.json")
+        let url = URL(string: "http://www.reddit.com/hot.json")
         
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
+        let task = URLSession.shared.dataTask(with: url!) {(data, response, error) in
             
             if error == nil {
-                let content = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: nil) as NSDictionary
-                
-                self.items = content["data"]!["children"] as? NSArray
+                if let content = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! Dictionary<String, Any> {
+                    
+                    if let data = content["data"] as? Dictionary<String, Any> {
+                        self.items = data["children"] as? [[String: Any]]
+                    }
+                }
                 
                 //chamar delegate para a interface
                 onResult(true)
             }
             else {
-                println(error.description)
                 onResult(false)
             }
             
@@ -39,9 +41,9 @@ class RedditManager {
         task.resume()
     }
     
-    func linkInfoForIndex(index : Int) -> LinkInfo? {
+    func linkInfoForIndex(_ index : Int) -> LinkInfo? {
         if let array = self.items {
-            if let data = array[index]!["data"] as? NSDictionary {
+            if let data = array[index]["data"] as? NSDictionary {
                 return LinkInfo(dict: data)
             }
         }
@@ -49,22 +51,26 @@ class RedditManager {
         return nil
     }
     
-    func retrieveCommentsForId(id: String, onResult: Bool -> Void) {
+    func retrieveCommentsForId(_ id: String, onResult: @escaping (Bool) -> Void) {
         
-        let url = NSURL(string: "http://www.reddit.com/comments/\(id).json?depth=2")
+        let url = URL(string: "http://www.reddit.com/comments/\(id).json?depth=2")
         
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
+        let task = URLSession.shared.dataTask(with: url!) {(data, response, error) in
             
             if error == nil {
-                let content = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: nil) as NSArray
+                if let content = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [[String: Any]] {
+                    
+                    if let data = content[1]["data"] as? Dictionary<String, Any> {
+                        self.comments = data["children"] as? [[String: Any]]
+                        
+                        onResult(true)
+                    }
+                } else {
+                    onResult(false)
+                }
                 
-                self.comments = content[1]!["data"]!["children"] as? NSArray
-                
-                //chamar delegate para a interface
-                onResult(true)
             }
             else {
-                println(error.description)
                 onResult(false)
             }
             
@@ -73,10 +79,10 @@ class RedditManager {
         task.resume()
     }
     
-    func commentForIndex(index : Int) -> Comment? {
+    func commentForIndex(_ index : Int) -> Comment? {
         if let array = self.comments {
-            if let data = array[index]!["data"] as? NSDictionary {
-                if array[index]!["kind"] as String == "more" {
+            if let data = array[index]["data"] as? NSDictionary {
+                if array[index]["kind"] as? String == "more" {
                     return nil
                 }
                 else {

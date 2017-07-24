@@ -10,21 +10,21 @@ import UIKit
 
 class LinkViewController: UIViewController, UIWebViewDelegate {
 
-    @IBOutlet var webview: UIWebView
-    @IBOutlet var activityIndicator: UIActivityIndicatorView
+    @IBOutlet var webview: UIWebView?
+    @IBOutlet var activityIndicator: UIActivityIndicatorView?
     
     var linkInfo : LinkInfo?
     
-    init(coder aDecoder: NSCoder!) {
-        super.init(coder: aDecoder)
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)!
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let url = NSURLRequest(URL: NSURL(string: linkInfo?.url))
-        webview.loadRequest(url)
-        webview.delegate = self
+        let url = URLRequest(url: URL(string: (linkInfo?.url)!)!)
+        webview?.loadRequest(url)
+        webview?.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -32,9 +32,9 @@ class LinkViewController: UIViewController, UIWebViewDelegate {
     }
     
     
-    func webViewDidFinishLoad(webView: UIWebView!) {
-        UIView.animateWithDuration(0.2, animations: {
-           self.activityIndicator.alpha = 0
+    func webViewDidFinishLoad(_ webView: UIWebView) {
+        UIView.animate(withDuration: 0.2, animations: {
+           self.activityIndicator?.alpha = 0
         })
     }
 }

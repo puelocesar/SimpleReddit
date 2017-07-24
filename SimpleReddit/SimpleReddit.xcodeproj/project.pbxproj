@@ -24,6 +24,9 @@
 		3AE3529D1966DF780057E77B /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE3529C1966DF780057E77B /* Comment.swift */; };
 		3AE3529F1966EF9A0057E77B /* CommentTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AE3529E1966EF9A0057E77B /* CommentTableCell.xib */; };
 		3AE352A11966F1400057E77B /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE352A01966F1400057E77B /* CommentCell.swift */; };
+		3AE958661F26840300E6C137 /* RedditManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A166EC91964892B003307A7 /* RedditManager.swift */; };
+		3AE958671F26840300E6C137 /* LinkInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE352941965FB0B0057E77B /* LinkInfo.swift */; };
+		3AE958681F26843900E6C137 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE3529C1966DF780057E77B /* Comment.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -198,14 +201,17 @@
 		3A166E9C196462E3003307A7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Paulo Cesar Ferreira";
 				TargetAttributes = {
 					3A166EA3196462E3003307A7 = {
 						CreatedOnToolsVersion = 6.0;
+						LastSwiftMigration = 0830;
 					};
 					3A166EB7196462E4003307A7 = {
 						CreatedOnToolsVersion = 6.0;
+						LastSwiftMigration = 0830;
 						TestTargetID = 3A166EA3196462E3003307A7;
 					};
 				};
@@ -272,6 +278,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AE958681F26843900E6C137 /* Comment.swift in Sources */,
+				3AE958661F26840300E6C137 /* RedditManager.swift in Sources */,
+				3AE958671F26840300E6C137 /* LinkInfo.swift in Sources */,
 				3A166EBF196462E4003307A7 /* SimpleRedditTests.swift in Sources */,
 				3AE352991966DAAB0057E77B /* CommentsTests.swift in Sources */,
 			);
@@ -382,9 +391,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = SimpleReddit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -395,9 +405,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = SimpleReddit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -418,6 +429,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				METAL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Debug;
@@ -434,6 +446,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				METAL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Release;

@@ -8,20 +8,16 @@
 
 import UIKit
 
-class MainViewController: UITableViewController, UITableViewDelegate {
+class MainViewController: UITableViewController {
 
     let reddit : RedditManager = RedditManager();
     
-    init(coder aDecoder: NSCoder!) {
-        super.init(coder: aDecoder)
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         setupRefreshControl()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
 
@@ -35,7 +31,7 @@ class MainViewController: UITableViewController, UITableViewDelegate {
 
     // #pragma mark - Table view data source
     
-    override func numberOfSectionsInTableView(tableView: UITableView!) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         if let items_count = self.reddit.items?.count {
             return items_count
         }
@@ -44,27 +40,26 @@ class MainViewController: UITableViewController, UITableViewDelegate {
         }
     }
 
-    override func tableView(tableView: UITableView?, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView?, numberOfRowsInSection section: Int) -> Int {
         return 2;
     }
 
-    override func tableView(tableView: UITableView?,
-        cellForRowAtIndexPath indexPath: NSIndexPath?) -> UITableViewCell? {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        if (indexPath?.row == 1) {
+        if (indexPath.row == 1) {
             
             var cell : UITableViewCell
             
-            if let reusedCell = tableView?.dequeueReusableCellWithIdentifier("CommentsCell") as? UITableViewCell {
+            if let reusedCell = tableView.dequeueReusableCell(withIdentifier: "CommentsCell") {
                 cell = reusedCell
             }
             else {
-                cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "CommentsCell")
-                cell.textLabel.font = UIFont(name: "HelveticaNeue-Light", size: 14)
+                cell = UITableViewCell(style: UITableViewCellStyle.value1, reuseIdentifier: "CommentsCell")
+                cell.textLabel?.font = UIFont(name: "HelveticaNeue-Light", size: 14)
             }
             
-            if let linkInfo = self.reddit.linkInfoForIndex(indexPath!.section) {
-                cell.textLabel.text = String(linkInfo.comments) + " comments"
+            if let linkInfo = self.reddit.linkInfoForIndex(indexPath.section) {
+                cell.textLabel?.text = String(linkInfo.comments) + " comments"
             }
             
             return cell
@@ -72,25 +67,25 @@ class MainViewController: UITableViewController, UITableViewDelegate {
         else {
             var cell : CustomCellTableViewCell
             
-            if let reusedCell = tableView?.dequeueReusableCellWithIdentifier("CustomTableCell") as? CustomCellTableViewCell {
+            if let reusedCell = tableView.dequeueReusableCell(withIdentifier: "CustomTableCell") as? CustomCellTableViewCell {
                 cell = reusedCell
             }
             else {
-                let nib = NSBundle.mainBundle().loadNibNamed("CustomTableCell",
+                let nib = Bundle.main.loadNibNamed("CustomTableCell",
                     owner: self, options: nil)
-                cell = nib[0] as CustomCellTableViewCell
+                cell = nib?[0] as! CustomCellTableViewCell
             }
             
-            if let linkInfo = self.reddit.linkInfoForIndex(indexPath!.section) {
-                cell.formatCell(linkInfo, indexPath: indexPath!)
+            if let linkInfo = self.reddit.linkInfoForIndex(indexPath.section) {
+                cell.formatCell(linkInfo, indexPath: indexPath)
             }
             
             return cell
         }
     }
     
-    override func tableView(tableView: UITableView!,
-        heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+    override func tableView(_ tableView: UITableView,
+        heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         if (indexPath.row == 0) {
             return 80
@@ -104,35 +99,35 @@ class MainViewController: UITableViewController, UITableViewDelegate {
     
     var currentLinkInfo : LinkInfo?
     
-    override func tableView(tableView: UITableView!,
-        didSelectRowAtIndexPath indexPath: NSIndexPath!) {
+    override func tableView(_ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath) {
             
-        if let data = self.reddit.linkInfoForIndex(indexPath!.section) {
+        if let data = self.reddit.linkInfoForIndex(indexPath.section) {
             currentLinkInfo = data
             
             var identifier : String
             
-            if (indexPath!.row == 0) {
+            if (indexPath.row == 0) {
                 identifier = "showLink"
             }
             else {
                 identifier = "showComments"
             }
             
-            performSegueWithIdentifier(identifier, sender: self)
-            self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            performSegue(withIdentifier: identifier, sender: self)
+            self.tableView.deselectRow(at: indexPath, animated: true)
         }
     }
     
     // #pragma mark - navigation
     
-    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
         if (segue.identifier == "showLink") {
-            let controller = segue.destinationViewController as LinkViewController
+            let controller = segue.destination as! LinkViewController
             controller.linkInfo = currentLinkInfo
         }
         else {
-            let controller = segue.destinationViewController as CommentsViewController
+            let controller = segue.destination as! CommentsViewController
             controller.commentId = currentLinkInfo!.id
         }
     }

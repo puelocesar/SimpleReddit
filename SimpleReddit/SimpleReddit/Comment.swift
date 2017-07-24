@@ -11,10 +11,10 @@ import UIKit
 class Comment: NSObject {
     init(dict : NSDictionary, loadReplies: Bool) {
         
-        id = dict["id"] as String
-        body = dict["body"] as String
-        author = dict["author"] as String
-        score = dict["score"] as Int
+        id = dict["id"] as! String
+        body = dict["body"] as! String
+        author = dict["author"] as! String
+        score = dict["score"] as! Int
         replies = []
         
         super.init()
@@ -22,13 +22,15 @@ class Comment: NSObject {
         if loadReplies {
             if let replies = dict["replies"] as? NSDictionary {
                 
-                let children = replies["data"]!["children"] as NSArray
-            
-                for child : AnyObject in children {
-                    if child["kind"] as String != "more" {                    
-                        if let data = child["data"] as? NSDictionary {
-                            let comment = Comment(dict: data, loadReplies: false)
-                            self.replies.append(comment)
+                if let data = replies["data"] as? NSDictionary {
+                    let children = data["children"] as? [NSDictionary]
+                    
+                    for child in children! {
+                        if child["kind"] as! String != "more" {
+                            if let data = child["data"] as? NSDictionary {
+                                let comment = Comment(dict: data, loadReplies: false)
+                                self.replies.append(comment)
+                            }
                         }
                     }
                 }
@@ -36,7 +38,7 @@ class Comment: NSObject {
         }
     }
     
-    init() {
+    override init() {
         id = ""
         body = ""
         author = ""
@@ -47,6 +49,6 @@ class Comment: NSObject {
     let id : String
     let author : String
     let body : String
-    let replies : Array<Comment>
+    var replies : Array<Comment>
     let score : Int
 }

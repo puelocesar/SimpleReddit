@@ -15,13 +15,13 @@ protocol ThumbnailLoadDelegate {
 class LinkInfo: NSObject {
     
     init(dict : NSDictionary) {
-        id = dict["id"] as String
-        title = dict["title"] as String
-        url = dict["url"] as String
-        thumbnail = dict["thumbnail"] as String
-        comments = dict["num_comments"] as Int
-        ups = dict["ups"] as Int
-        downs = dict["downs"] as Int
+        id = dict["id"] as! String
+        title = dict["title"] as! String
+        url = dict["url"] as! String
+        thumbnail = dict["thumbnail"] as! String
+        comments = dict["num_comments"] as! Int
+        ups = dict["ups"] as! Int
+        downs = dict["downs"] as! Int
         
         super.init()
     }
@@ -40,20 +40,19 @@ class LinkInfo: NSObject {
     
     //utilitario para tratar path do thumb
     func getThumbnailPath() -> String {
-        return NSHomeDirectory().stringByAppendingPathComponent("Documents/" +
-            self.thumbnail.lastPathComponent)
+        return (NSHomeDirectory() as NSString).appendingPathComponent("Documents/" +
+            (self.thumbnail as NSString).lastPathComponent)
     }
     
-    let backgroundQueue = dispatch_queue_create("com.teste.redditbackground", nil)
+    let backgroundQueue = DispatchQueue(label: "com.teste.redditbackground", attributes: [])
     
     //carrega o thumbnail do disco em uma thread
     //se não tiver no disco, começa o download
     func loadImage() {
-        dispatch_async(backgroundQueue) {
-            if let data = NSData.dataWithContentsOfFile(self.getThumbnailPath(),
-                options: nil, error: nil) {
+        backgroundQueue.async {
+            if let data = NSData(contentsOfFile: self.getThumbnailPath()) {
                     
-                self.thumbnail_image = UIImage(data: data)
+                self.thumbnail_image = UIImage(data: data as Data)
                 self.delegate?.thumbnailFinished()
             }
             else {
@@ -68,10 +67,12 @@ class LinkInfo: NSObject {
         if !thumbnail_loading {
             thumbnail_loading = true
             
-            let url = NSURL(string: thumbnail)
-            let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
-                self.thumbnail_image = UIImage(data: data)
-                data.writeToFile(self.getThumbnailPath(), atomically: true)
+            let url = URL(string: thumbnail)
+            let task = URLSession.shared.dataTask(with: url!) {(data, response, error) in
+                self.thumbnail_image = UIImage(data: data!)
+                
+                try? data?.write(to: URL(fileURLWithPath: self.getThumbnailPath()))
+                
                 self.thumbnail_loading = false
                 
                 self.delegate?.thumbnailFinished()
@@ -83,6 +84,6 @@ class LinkInfo: NSObject {
     
     //links que não tem thumbnail
     func hasThumbnail() -> Bool {
-        return !contains(["", "self", "nsfw", "default"], thumbnail)
+        return !["", "self", "nsfw", "default"].contains(thumbnail)
     }
 }
